@@ -61,7 +61,7 @@ const Navbar = () => {
             className="hover:text-[#FF9F0D] cursor-pointer px-4 md:px-0"
             onClick={() => setMenuOpen(false)}
           >
-            <Link href="/">About</Link>
+            <Link href="/about">About</Link>
           </li>
           <li
             className="hover:text-[#FF9F0D] cursor-pointer px-4 md:px-0"
@@ -89,7 +89,9 @@ const Navbar = () => {
               <CiSearch />
             </span>
           </div>
-          <IoBagHandle className="w-[24px] h-[24px]" />
+          <Link href="/cart">
+            <IoBagHandle className="w-[24px] h-[24px]" />
+          </Link>
           <Link href="/signin">
             <FaUser className="w-[20px] h-[20px]" />
           </Link>
