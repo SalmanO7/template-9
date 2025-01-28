@@ -27,7 +27,6 @@ const Navbar = () => {
           )}
         </div>
 
-        {/* Links */}
         <ul
           className={`absolute md:static top-16 left-0 w-full md:w-auto bg-black md:bg-transparent md:flex items-center space-y-4 md:space-y-0 md:space-x-6 text-sm transition-all duration-300 ${
             menuOpen ? "block" : "hidden"
@@ -77,7 +76,7 @@ const Navbar = () => {
           </li>
         </ul>
 
-        {/* Search Box and Cart Icon */}
+
         <div className="hidden md:flex items-center space-x-2">
           <div className="relative">
             <input

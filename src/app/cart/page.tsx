@@ -1,101 +1,143 @@
-// import Image from "next/image";
-// import { useCart } from "@/context/Context"; // Adjust the path as necessary
+"use client";
+import { useEffect } from "react";
+import { useCart } from "@/context/Context";
 
-// export default function ShoppingCart() {
-//   const { cartItems, updateQuantity, removeFromCart } = useCart();
+import Link from "next/link";
 
-//   // Calculate totals
-//   const subtotal = cartItems.reduce(
-//     (total, item) => total + item.price * item.quantity,
-//     0
-//   );
-//   const discount = 0.25 * subtotal; // Example: 25% discount
-//   const tax = 0.1 * (subtotal - discount); // Example: 10% tax
-//   const total = subtotal - discount + tax;
 
-//   return (
-//     <div className="container mx-auto px-4 py-8">
-//       <h2 className="text-2xl font-semibold mb-6">Shopping Cart</h2>
-//       <div className="grid gap-8 lg:grid-cols-2 md:grid-cols-1">
-//         {/* Left Column - Cart Items */}
-//         <div className="space-y-6">
-//           {cartItems.length > 0 ? (
-//             cartItems.map((item) => (
-//               <div
-//                 key={item.id}
-//                 className="flex items-center justify-between space-x-4"
-//               >
-//                 <div className="relative h-16 w-16">
-//                   <Image
-//                     src={item.image}
-//                     alt={item.name}
-//                     fill
-//                     className="object-cover"
-//                   />
-//                 </div>
-//                 <div className="flex-1">
-//                   <h3 className="font-medium">{item.name}</h3>
-//                   <p className="text-sm text-gray-500">
-//                     ${item.price.toFixed(2)} x {item.quantity}
-//                   </p>
-//                 </div>
-//                 <div className="flex items-center space-x-2">
-//                   <button
-//                     className="px-2 py-1 bg-gray-200 rounded"
-//                     onClick={() =>
-//                       updateQuantity(item.id, Math.max(1, item.quantity - 1))
-//                     }
-//                   >
-//                     -
-//                   </button>
-//                   <span>{item.quantity}</span>
-//                   <button
-//                     className="px-2 py-1 bg-gray-200 rounded"
-//                     onClick={() => updateQuantity(item.id, item.quantity + 1)}
-//                   >
-//                     +
-//                   </button>
-//                   <button
-//                     className="px-2 py-1 bg-red-500 text-white rounded"
-//                     onClick={() => removeFromCart(item.id)}
-//                   >
-//                     Remove
-//                   </button>
-//                 </div>
-//               </div>
-//             ))
-//           ) : (
-//             <p className="text-gray-500">Your cart is empty.</p>
-//           )}
-//         </div>
 
-//         {/* Right Column - Order Summary */}
-//         <div className="p-6 rounded-lg border-2 border-gray-300">
-//           <h2 className="text-xl font-semibold mb-4">Order Summary</h2>
-//           <div className="space-y-2">
-//             <div className="flex justify-between text-sm">
-//               <span className="text-gray-600">Subtotal</span>
-//               <span className="font-medium">${subtotal.toFixed(2)}</span>
-//             </div>
-//             <div className="flex justify-between text-sm">
-//               <span className="text-gray-600">Discount</span>
-//               <span className="font-medium">- ${discount.toFixed(2)}</span>
-//             </div>
-//             <div className="flex justify-between text-sm">
-//               <span className="text-gray-600">Tax</span>
-//               <span className="font-medium">+ ${tax.toFixed(2)}</span>
-//             </div>
-//             <div className="flex justify-between border-t pt-2">
-//               <span className="font-semibold">Total</span>
-//               <span className="font-semibold">${total.toFixed(2)}</span>
-//             </div>
-//           </div>
 
-//           <button className="w-full mt-6 px-6 py-3 bg-[#FF9F0D] text-white rounded-md shadow-sm text-sm font-medium hover:bg-[#FF9F0D] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#FF9F0D]">
-//             Checkout
-//           </button>
-//         </div>
-//       </div>
-//     </div>
-//   );
-// }
+
+const CartPage = () => {
+  const { cartItems, setCartItems, increaseQuantity, decreaseQuantity } =
+    useCart();
+
+  // Load cart items from localStorage on initial render
+  useEffect(() => {
+    try {
+      const storedCartItems = localStorage.getItem("cartItems");
+      if (storedCartItems) {
+        setCartItems(JSON.parse(storedCartItems));
+      }
+    } catch (error) {
+      console.error("Error loading cart items from localStorage:", error);
+    }
+  }, [setCartItems]);
+
+  // Save cart items to localStorage whenever cartItems state changes
+  useEffect(() => {
+    try {
+      localStorage.setItem("cartItems", JSON.stringify(cartItems));
+    } catch (error) {
+      console.error("Error saving cart items to localStorage:", error);
+    }
+  }, [cartItems]);
+
+  // Remove item from cart
+  const removeFromCart = (productId: string) => {
+    const removedItem = cartItems.find((item) => item.product._id === productId);
+
+    setCartItems(cartItems.filter((item) => item.product._id !== productId));
+
+    if (removedItem) {
+      console.log(`Removed "${removedItem.product.name}" from cart`);
+    }
+  };
+
+  // Calculate subtotal
+  const calculateSubtotal = () => {
+    return cartItems.reduce(
+      (total, item) => total + item.product.price * item.quantity,
+      0
+    );
+  };
+
+  return (
+    <>
+      <nav className="md:px-9 xl:pl-16 text-sm flex justify-start gap-x-1 sm:px-10 text-gray-500 mb-6 px-10 py-6 md:py-8">
+        <Link href="/">Home</Link> /{" "}
+        <span className="text-black font-semibold">Your Cart</span>
+      </nav>
+
+      {cartItems.length === 0 ? (
+        <div className="flex justify-center items-center pt-40 pb-16">
+          <p>
+            Your cart is empty{" "}
+            <Link href="/" className="bg-gray-100 py-2 px-3 rounded-2xl">
+              Select Products
+            </Link>
+          </p>
+        </div>
+      ) : (
+        <div className="p-4 md:p-10 bg-gray-50 min-h-screen">
+          <h1 className="text-2xl font-bold text-gray-800 mb-6">Your Cart</h1>
+          <div>
+            {cartItems.map((item: any) => (
+              <div
+                key={item.product._id}
+                className="flex justify-between items-center border-b py-4"
+              >
+                <div className="flex items-start sm:items-center flex-col gap-2 sm:flex-row">
+                  <img
+                    src={item.product.imageUrl}
+                    alt={item.product.name}
+                    width={50}
+                    height={50}
+                    className="rounded ml-5 sm:ml-0"
+                  />
+                  <span className="ml-4">{item.product.name}</span>
+                </div>
+                <div className="flex items-center flex-col-reverse sm:flex-row gap-5 sm:gap-x-16">
+                  <div className="flex items-center">
+                    <button
+                      onClick={() => decreaseQuantity(item.product._id)}
+                      className="px-2 py-1 border border-gray-300 rounded-full"
+                    >
+                      -
+                    </button>
+                    <span className="px-4">{item.quantity}</span>
+                    <button
+                      onClick={() => increaseQuantity(item.product._id)}
+                      className="px-2 py-1 border border-gray-300 rounded-full"
+                    >
+                      +
+                    </button>
+                  </div>
+                  <div className="flex items-center gap-4">
+                    <span className="font-semibold">
+                      ${item.product.price * item.quantity}
+                    </span>
+                    <button
+                      onClick={() => removeFromCart(item.product._id)}
+                      className="px-4 py-2 text-sm bg-[#01B5DA] text-white rounded-md hover:bg-[#1F2937]"
+                    >
+                      Remove
+                    </button>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <div className="flex justify-between items-center mt-6 border-t pt-6">
+            <span className="text-xl font-bold">Subtotal</span>
+            <span className="text-xl font-semibold">
+              ${calculateSubtotal()}
+            </span>
+          </div>
+
+          <div className="mt-8 flex justify-between items-center space-x-4">
+            <Link
+              href="/checkout"
+              className="w-full text-sm sm:text-base sm:w-auto px-4 sm:px-6 py-2 sm:py-3 bg-[#01B5DA] text-white rounded-md hover:bg-[#1F2937]"
+            >
+              Proceed to Checkout
+            </Link>
+          </div>
+        </div>
+      )}
+    </>
+  );
+};
+
+export default CartPage;

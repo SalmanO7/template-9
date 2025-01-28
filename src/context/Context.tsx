@@ -1,99 +1,137 @@
-// src/context/CartContext.tsx
-import React, { createContext, useContext, useReducer } from "react";
+"use client";
+import React, {
+  createContext,
+  useState,
+  useEffect,
+  ReactNode,
+  useContext,
+} from "react";
 
-export interface CartItem {
-  id: string;
-  title: string;
+// Define product types
+interface ICartType {
+  _id: string;
+  category: string;
+  name: string;
   price: number;
-  quantity: number;
-  image: string;
+  description: string;
+  imageUrl: string;
 }
 
-interface CartState {
-  items: CartItem[];
-  totalAmount: number;
+interface CartItem {
+  product: ICartType;
+  quantity: number;
 }
 
 interface CartContextProps {
-  cart: CartState;
-  addToCart: (item: CartItem) => void;
-  removeFromCart: (id: string) => void;
-  clearCart: () => void;
+  cartItems: CartItem[];
+  setCartItems: React.Dispatch<React.SetStateAction<CartItem[]>>; // Add this line to include setCartItems
+  addToCart: (product: ICartType) => void;
+  removeFromCart: (productId: string) => void;
+  increaseQuantity: (productId: string) => void;
+  decreaseQuantity: (productId: string) => void;
+  addToWishlist: (product: ICartType) => void;
+  wishlist: ICartType[];
 }
-
-const initialCartState: CartState = {
-  items: [],
-  totalAmount: 0,
-};
 
 const CartContext = createContext<CartContextProps | undefined>(undefined);
 
-type Action =
-  | { type: "ADD_TO_CART"; payload: CartItem }
-  | { type: "REMOVE_FROM_CART"; payload: string }
-  | { type: "CLEAR_CART" };
+// Cart Provider to manage cart and wishlist state
+export const CartProvider = ({ children }: { children: ReactNode }) => {
+  const [cartItems, setCartItems] = useState<CartItem[]>([]);
+  const [wishlist, setWishlist] = useState<ICartType[]>([]);
 
-const cartReducer = (state: CartState, action: Action): CartState => {
-  switch (action.type) {
-    case "ADD_TO_CART": {
-      const existingItem = state.items.find((item) => item.id === action.payload.id);
-      let updatedItems;
+  // Load data from localStorage on initial render
+  useEffect(() => {
+    const storedCartItems = localStorage.getItem("cartItems");
+    const storedWishlist = localStorage.getItem("wishlist");
+    if (storedCartItems) setCartItems(JSON.parse(storedCartItems));
+    if (storedWishlist) setWishlist(JSON.parse(storedWishlist));
+  }, []);
 
+  // Sync cartItems to localStorage whenever it changes
+  useEffect(() => {
+    localStorage.setItem("cartItems", JSON.stringify(cartItems));
+  }, [cartItems]);
+
+  // Sync wishlist to localStorage whenever it changes
+  useEffect(() => {
+    localStorage.setItem("wishlist", JSON.stringify(wishlist));
+  }, [wishlist]);
+
+  // Add item to wishlist
+  const addToWishlist = (product: ICartType) => {
+    const exists = wishlist.find((item) => item._id === product._id);
+    if (!exists) {
+      setWishlist([...wishlist, product]);
+    }
+  };
+
+  // Add item to cart
+  const addToCart = (product: ICartType) => {
+    setCartItems((prevItems) => {
+      const existingItem = prevItems.find(
+        (item) => item.product._id === product._id
+      );
       if (existingItem) {
-        updatedItems = state.items.map((item) =>
-          item.id === action.payload.id
+        return prevItems.map((item) =>
+          item.product._id === product._id
             ? { ...item, quantity: item.quantity + 1 }
             : item
         );
       } else {
-        updatedItems = [...state.items, { ...action.payload, quantity: 1 }];
+        return [...prevItems, { product, quantity: 1 }];
       }
-
-      const updatedTotal = updatedItems.reduce(
-        (total, item) => total + item.price * item.quantity,
-        0
-      );
-
-      return { items: updatedItems, totalAmount: updatedTotal };
-    }
-    case "REMOVE_FROM_CART": {
-      const updatedItems = state.items.filter((item) => item.id !== action.payload);
-      const updatedTotal = updatedItems.reduce(
-        (total, item) => total + item.price * item.quantity,
-        0
-      );
-
-      return { items: updatedItems, totalAmount: updatedTotal };
-    }
-    case "CLEAR_CART":
-      return initialCartState;
-    default:
-      return state;
-  }
-};
-
-export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [cart, dispatch] = useReducer(cartReducer, initialCartState);
-
-  const addToCart = (item: CartItem) => {
-    dispatch({ type: "ADD_TO_CART", payload: item });
+    });
   };
 
-  const removeFromCart = (id: string) => {
-    dispatch({ type: "REMOVE_FROM_CART", payload: id });
+  // Remove item from cart
+  const removeFromCart = (productId: string) => {
+    setCartItems((prevItems) =>
+      prevItems.filter((item) => item.product._id !== productId)
+    );
   };
 
-  const clearCart = () => {
-    dispatch({ type: "CLEAR_CART" });
+  // Increase quantity of item in cart
+  const increaseQuantity = (productId: string) => {
+    setCartItems((prevItems) =>
+      prevItems.map((item) =>
+        item.product._id === productId
+          ? { ...item, quantity: item.quantity + 1 }
+          : item
+      )
+    );
+  };
+
+  // Decrease quantity of item in cart
+  const decreaseQuantity = (productId: string) => {
+    setCartItems((prevItems) =>
+      prevItems.map((item) =>
+        item.product._id === productId && item.quantity > 1
+          ? { ...item, quantity: item.quantity - 1 }
+          : item
+      )
+    );
   };
 
   return (
-    <CartContext.Provider value={{ cart, addToCart, removeFromCart, clearCart }}>
+    <CartContext.Provider
+      value={{
+        cartItems,
+        setCartItems, // Pass setCartItems here
+        addToCart,
+        removeFromCart,
+        increaseQuantity,
+        decreaseQuantity,
+        wishlist,
+        addToWishlist,
+      }}
+    >
       {children}
     </CartContext.Provider>
   );
 };
 
+// Custom hook to access cart context
 export const useCart = () => {
   const context = useContext(CartContext);
   if (!context) {

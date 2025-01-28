@@ -1,14 +1,34 @@
-import React from 'react'
-import Image from 'next/image'
+import React from "react";
+import Image from "next/image";
+import { client } from "@/sanity/lib/client";
+import Link from "next/link";
 
-const FoodCategory = () => {
-  // Items array containing food details
-  const items = [
-    { id: 1, img: "/fc1.png", label: "Save 50% on Fast Food" },
-    { id: 2, img: "/fc2.png", label: "Delicious Burgers" },
-    { id: 3, img: "/fc3.png", label: "Healthy Salads" },
-    { id: 4, img: "/fc4.png", label: "Desserts" },
-  ];
+export interface IFood {
+  _id: string;
+  category: string;
+  name: string;
+  price: number;
+  description: string;
+  imageUrl: string;
+}
+
+const getData = async () => {
+  const res = await client.fetch(`   
+*[_type == "food"]{
+  _id,
+  category,
+  name,
+  price,
+  description,
+  "imageUrl": image.asset->url
+}
+    `);
+
+  return res;
+};
+
+const FoodCategory = async () => {
+  const data = await getData();
 
   return (
     <section className="bg-black text-white py-16 px-6">
@@ -22,27 +42,27 @@ const FoodCategory = () => {
         </h2>
 
         {/* Grid of food items */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {items.map((item) => (
-            <div key={item.id} className="relative">
-              {/* Image of the food item */}
-              <Image
-                src={item.img}
-                alt={item.label}
-                width={500}
-                height={500}
-                className="object-cover rounded-lg w-full h-full"
-              />
-              {/* Label or Description for the food item */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 px-5 sm:px-1 gap-6 sm:gap-7 md:gap-10">
+          {data.map((item: IFood) => (
+            <div key={item._id} className="relative">
+              <Link href={`/${item._id}`}>
+                <Image
+                  src={item.imageUrl}
+                  alt={item.name}
+                  width={400}
+                  height={400}
+                  className="object-cover rounded-lg w-full h-full"
+                />
+              </Link>
               <div className="absolute bottom-0 left-0 w-full bg-black bg-opacity-50 text-white text-xl font-semibold p-4 rounded-b-lg">
-                {item.label}
+                {item.name}
               </div>
             </div>
           ))}
         </div>
       </div>
     </section>
-  )
-}
+  );
+};
 
-export default FoodCategory
+export default FoodCategory;
