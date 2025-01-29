@@ -2,7 +2,7 @@
 import Link from "next/link";
 import React from "react";
 import { CiSearch, CiUser } from "react-icons/ci";
-import { IoBagHandle } from "react-icons/io5";
+import { IoBagHandle, IoHeart } from "react-icons/io5";
 import { HiMenuAlt3, HiX } from "react-icons/hi";
 import { SignedIn, SignedOut, useClerk, UserButton } from "@clerk/nextjs";
 
@@ -132,6 +132,9 @@ const Navbar = () => {
           <div className="flex gap-3 justify-center items-center">
             <Link href="/cart" className="text-[#FF9F0D] hover:text-orange-600">
               <IoBagHandle className="w-7 h-7" />
+            </Link>
+            <Link href="/wishlist" className="text-[#FF9F0D] hover:text-orange-600">
+              <IoHeart className="w-7 h-7" />
             </Link>
             <SignedOut>
               <button

@@ -30,6 +30,7 @@ interface CartContextProps {
   increaseQuantity: (productId: string) => void;
   decreaseQuantity: (productId: string) => void;
   addToWishlist: (product: ICartType) => void;
+  removeFromWishlist: (productId: string) => void; // Add removeFromWishlist
   wishlist: ICartType[];
 }
 
@@ -64,6 +65,13 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
     if (!exists) {
       setWishlist([...wishlist, product]);
     }
+  };
+
+  // Remove item from wishlist
+  const removeFromWishlist = (productId: string) => {
+    setWishlist((prevItems) =>
+      prevItems.filter((item) => item._id !== productId)
+    );
   };
 
   // Add item to cart
@@ -124,6 +132,7 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
         decreaseQuantity,
         wishlist,
         addToWishlist,
+        removeFromWishlist, // Expose removeFromWishlist here
       }}
     >
       {children}

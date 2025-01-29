@@ -1,12 +1,7 @@
 "use client";
 import { useEffect } from "react";
 import { useCart } from "@/context/Context";
-
 import Link from "next/link";
-
-
-
-
 
 const CartPage = () => {
   const { cartItems, setCartItems, increaseQuantity, decreaseQuantity } =
@@ -56,21 +51,21 @@ const CartPage = () => {
     <>
       <nav className="md:px-9 xl:pl-16 text-sm flex justify-start gap-x-1 sm:px-10 text-gray-500 mb-6 px-10 py-6 md:py-8">
         <Link href="/">Home</Link> /{" "}
-        <span className="text-black font-semibold">Your Cart</span>
+        <span className="text-[#FF9F0D] font-semibold">Your Cart</span>
       </nav>
 
       {cartItems.length === 0 ? (
         <div className="flex justify-center items-center pt-40 pb-16">
-          <p>
+          <p className="text-white">
             Your cart is empty{" "}
-            <Link href="/" className="bg-gray-100 py-2 px-3 rounded-2xl">
+            <Link href="/" className="bg-[#FF9F0D] py-2 px-3 rounded-2xl">
               Select Products
             </Link>
           </p>
         </div>
       ) : (
-        <div className="p-4 md:p-10 bg-gray-50 min-h-screen">
-          <h1 className="text-2xl font-bold text-gray-800 mb-6">Your Cart</h1>
+        <div className="p-4 md:p-10 bg-black min-h-screen text-white">
+          <h1 className="text-2xl font-bold text-white mb-6">Your Cart</h1>
           <div>
             {cartItems.map((item: any) => (
               <div
@@ -109,7 +104,7 @@ const CartPage = () => {
                     </span>
                     <button
                       onClick={() => removeFromCart(item.product._id)}
-                      className="px-4 py-2 text-sm bg-[#01B5DA] text-white rounded-md hover:bg-[#1F2937]"
+                      className="px-4 py-2 text-sm bg-[#FF9F0D] text-white rounded-md hover:bg-[#e88709]"
                     >
                       Remove
                     </button>
@@ -129,7 +124,7 @@ const CartPage = () => {
           <div className="mt-8 flex justify-between items-center space-x-4">
             <Link
               href="/checkout"
-              className="w-full text-sm sm:text-base sm:w-auto px-4 sm:px-6 py-2 sm:py-3 bg-[#01B5DA] text-white rounded-md hover:bg-[#1F2937]"
+              className="w-full text-sm sm:text-base sm:w-auto px-4 sm:px-6 py-2 sm:py-3 bg-[#FF9F0D] text-white rounded-md hover:bg-[#e88709]"
             >
               Proceed to Checkout
             </Link>
