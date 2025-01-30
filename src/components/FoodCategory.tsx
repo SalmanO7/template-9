@@ -33,7 +33,7 @@ const FoodCategory: React.FC<FoodCategoryProps> = ({ foodItems }) => {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 px-5 sm:px-1 gap-6 sm:gap-7 md:gap-10">
           {foodItems.map((item) => (
             <div key={item._id} className="relative">
-              <Link href={`/food/${item._id}`}>
+              <Link href={`/${item._id}`}>
                 <Image
                   src={item.imageUrl}
                   alt={item.name}
