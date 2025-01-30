@@ -2,33 +2,21 @@ import Image from "next/image";
 import { client } from "@/sanity/lib/client";
 import Link from "next/link";
 
-// Define TypeScript Interface for Food Items
-export interface IFood {
-  _id: string;
-  category: string;
-  name: string;
-  price: number;
-  description: string;
-  imageUrl: string;
-}
 
+interface FoodCategoryProps {
+  foodItems: {
+    _id: string;
+    category: string;
+    name: string;
+    price: number;
+    description: string;
+    imageUrl: string;
+  }[];
+}
 // Fetch Data (Server-Side)
 
 // Server Component for Food Category
-const FoodCategory = async () => {
-  const getData = async (): Promise<IFood[]> => {
-    return await client.fetch(`
-      *[_type == "food"]{
-        _id,
-        category,
-        name,
-        price,
-        description,
-        "imageUrl": image.asset->url
-      }
-    `);
-  };
-  const data = await getData();
+const FoodCategory: React.FC<FoodCategoryProps> = ({ foodItems }) => {
 
   return (
     <section className="bg-black text-white py-16 px-6">
@@ -43,7 +31,7 @@ const FoodCategory = async () => {
 
         {/* Grid of food items */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 px-5 sm:px-1 gap-6 sm:gap-7 md:gap-10">
-          {data.map((item) => (
+          {foodItems.map((item) => (
             <div key={item._id} className="relative">
               <Link href={`/food/${item._id}`}>
                 <Image
