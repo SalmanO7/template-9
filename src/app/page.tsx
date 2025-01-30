@@ -1,4 +1,3 @@
-
 import Error from "@/components/Error/Error";
 import FoodCategory from "@/components/FoodCategory";
 import HeroExperience from "@/components/HeroExperience";
@@ -8,12 +7,12 @@ import MeetChef from "@/components/MeetChef";
 export default function Home() {
   return (
     <>
-       <Landing />
-       <FoodCategory />
-       <HeroMenu />
-       <MeetChef />
-       <HeroExperience />
-       <Error />  
+      <Landing />
+      <FoodCategory />
+      <HeroMenu />
+      <MeetChef />
+      <HeroExperience />
+      <Error />
     </>
   );
 }

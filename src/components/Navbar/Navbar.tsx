@@ -4,11 +4,11 @@ import React from "react";
 import { CiSearch, CiUser } from "react-icons/ci";
 import { IoBagHandle, IoHeart } from "react-icons/io5";
 import { HiMenuAlt3, HiX } from "react-icons/hi";
-import { SignedIn, SignedOut, useClerk, UserButton } from "@clerk/nextjs";
+// import { SignedIn, SignedOut, useClerk, UserButton } from "@clerk/nextjs";
 
 const Navbar = () => {
   const [menuOpen, setMenuOpen] = React.useState(false);
-  const { openSignIn } = useClerk();
+  // const { openSignIn } = useClerk();
 
   return (
     <header className="bg-black text-white p-4 w-full fixed top-0 z-50">
@@ -97,7 +97,7 @@ const Navbar = () => {
             <Link href="/cart" className="text-[#FF9F0D] hover:text-orange-600">
               <IoBagHandle className="w-6 h-6" />
             </Link>
-            <SignedOut>
+            {/* <SignedOut>
               <button
                 className="flex items-center justify-center w-8 h-8 rounded-full bg-gray-700 text-white hover:bg-gray-600"
                 onClick={() => openSignIn()}
@@ -113,7 +113,7 @@ const Navbar = () => {
                   },
                 }}
               />
-            </SignedIn>
+            </SignedIn> */}
           </div>
         </nav>
 
@@ -136,7 +136,7 @@ const Navbar = () => {
             <Link href="/wishlist" className="text-[#FF9F0D] hover:text-orange-600">
               <IoHeart className="w-7 h-7" />
             </Link>
-            <SignedOut>
+            {/* <SignedOut>
               <button
                 className="flex items-center justify-center w-8 h-8 rounded-full bg-gray-700 text-white hover:bg-gray-600"
                 onClick={() => openSignIn()}
@@ -152,7 +152,7 @@ const Navbar = () => {
                   },
                 }}
               />
-            </SignedIn>
+            </SignedIn> */}
           </div>
         </div>
       </div>

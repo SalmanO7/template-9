@@ -57,7 +57,8 @@ const Page = () => {
     fetchProduct();
   }, [fetchProduct]);
 
-  const isInWishlist = product && wishlist.some((item) => item._id === product._id);
+  const isInWishlist =
+    product && wishlist.some((item) => item._id === product._id);
 
   const handleAddToCart = () => {
     if (product) {
@@ -103,42 +104,40 @@ const Page = () => {
   }
 
   return (
-    <div className="p-4 md:p-10 bg-black min-h-screen">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-y-24 gap-8 pt-7">
-        {/* Product Image */}
+    <div className="flex justify-center items-center min-h-screen bg-gray-900 p-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-y-16 gap-12 max-w-5xl w-full  rounded-lg p-10 shadow-xl">
         <div className="flex justify-center items-center">
           <Image
             src={product.imageUrl}
             alt={product.name}
             width={500}
             height={500}
-            className="object-cover rounded-lg"
+            className="object-cover rounded-lg shadow-md border border-gray-700"
           />
         </div>
 
         {/* Product Details */}
-        <div>
-          <h1 className="text-xl font-bold text-white mb-4">
-            {product.name}
-          </h1>
-          <p className="text-gray-400 mb-4">{product.description}</p>
-          <p className="text-[#FF9F0D] font-semibold text-lg mb-4">
-            ${product.price}
-          </p>
-          <div className="flex gap-4">
+        <div className="text-white space-y-5">
+          <h1 className="text-3xl font-extrabold">{product.name}</h1>
+          <p className="text-gray-400 leading-relaxed">{product.description}</p>
+          <p className="text-[#FF9F0D] font-bold text-2xl">${product.price}</p>
+
+          <div className="flex gap-4 mt-4">
             <button
-              onClick={handleAddToCart} // Trigger toast when adding to cart
-              className="bg-[#FF9F0D] text-white px-4 py-2 rounded hover:bg-[#e88709]"
+              onClick={handleAddToCart}
+              className="bg-[#FF9F0D] text-white px-6 py-3 rounded-lg font-medium transition duration-300 hover:bg-[#e88709] hover:scale-105"
             >
-              Add to Cart
+              Add to Cart 🛒
             </button>
             <button
-              onClick={handleAddToWishlist} // Trigger toast when adding/removing from wishlist
-              className={`${
-                isInWishlist ? "bg-red-500" : "bg-gray-700"
-              } text-white px-4 py-2 rounded hover:bg-gray-600`}
+              onClick={handleAddToWishlist}
+              className={`px-6 py-3 rounded-lg font-medium transition duration-300 ${
+                isInWishlist
+                  ? "bg-red-500 hover:bg-red-600 hover:scale-105"
+                  : "bg-gray-700 hover:bg-gray-600 hover:scale-105"
+              }`}
             >
-              {isInWishlist ? "Remove from Wishlist" : "Add to Wishlist"}
+              {isInWishlist ? "Remove from Wishlist ❤️" : "Add to Wishlist 🤍"}
             </button>
           </div>
         </div>
@@ -146,12 +145,12 @@ const Page = () => {
 
       {/* Toast Container for notifications */}
       <ToastContainer
-        position="bottom-right" // Move to the bottom-right corner
-        autoClose={3000} // Auto close after 3 seconds
-        hideProgressBar={true} // Hide the progress bar
-        newestOnTop={false} // Toast notifications appear in the order they are triggered
-        closeButton={false} // Optionally hide the close button
-        rtl={false} // If you need right-to-left direction (for languages)
+        position="bottom-right"
+        autoClose={3000}
+        hideProgressBar
+        newestOnTop={false}
+        closeButton={false}
+        rtl={false}
       />
     </div>
   );
