@@ -4,7 +4,7 @@ import { useCart } from "@/context/Context";
 import Link from "next/link";
 
 const WishlistPage = () => {
-  const { wishlist, removeFromCart } = useCart();
+  const { wishlist, removeFromWishlist } = useCart(); // Corrected function usage
 
   useEffect(() => {
     try {
@@ -14,22 +14,12 @@ const WishlistPage = () => {
     }
   }, [wishlist]);
 
-  const removeFromWishlist = (productId: string) => {
-    const updatedWishlist = wishlist.filter((item) => item._id !== productId);
-
-    removeFromCart(productId);
-
-    localStorage.setItem("wishlist", JSON.stringify(updatedWishlist));
-  };
-
   return (
     <>
       {/* Breadcrumbs */}
       <nav className="md:px-9 xl:pl-16 text-sm flex justify-start gap-x-1 sm:px-10 text-gray-500 mb-6 px-10 py-6 md:py-8 dark:text-gray-300">
-        <Link href="/">Home</Link> /{" "}
-        <span className="text-black font-semibold dark:text-white">
-          Your Wishlist
-        </span>
+        <Link href="/">Home</Link> /
+        <span className="text-black font-semibold dark:text-white"> Your Wishlist</span>
       </nav>
 
       {/* Wishlist Empty State */}
@@ -44,40 +34,33 @@ const WishlistPage = () => {
         </div>
       ) : (
         <div className="p-4 md:p-10 bg-gray-50 min-h-screen dark:bg-gray-900">
-          <h1 className="text-2xl font-bold text-gray-800 mb-6 dark:text-white">
+          <h1 className="text-3xl font-bold text-gray-800 mb-8 dark:text-white text-center">
             Your Wishlist
           </h1>
-          <div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {wishlist.map((item: any) => (
               <div
                 key={item._id}
-                className="flex justify-between items-center border-b py-4 dark:border-gray-700"
+                className="bg-white dark:bg-gray-800 rounded-lg shadow-lg py-3 flex flex-col justify-center items-center"
               >
-                <div className="flex items-start sm:items-center flex-col gap-2 sm:flex-row">
-                  <img
-                    src={item.imageUrl}
-                    alt={item.name}
-                    width={50}
-                    height={50}
-                    className="rounded ml-5 sm:ml-0"
-                  />
-                  <span className="ml-4 text-gray-800 dark:text-gray-100">
-                    {item.name}
+                <img
+                  src={item.imageUrl}
+                  alt={item.name}
+                  className="w-64 object-cover rounded-md mb-2"
+                />
+                <h3 className="text-lg font-semibold text-gray-800 dark:text-white pb-3">
+                  {item.name}
+                </h3>
+                <div className="flex justify-between items-center gap-5">
+                  <span className="text-gray-600 dark:text-gray-300 text-lg font-semibold">
+                    ${item.price}
                   </span>
-                </div>
-                <div className="flex items-center flex-col-reverse sm:flex-row gap-5 sm:gap-x-16">
-                  <div className="flex items-center gap-4">
-                    <span className="font-semibold text-gray-800 dark:text-gray-100">
-                      ${item.price}
-                    </span>
-
-                    <button
-                      onClick={() => removeFromWishlist(item._id)} // Call removeFromWishlist
-                      className="px-4 py-2 text-sm bg-red-500 text-white rounded-md hover:bg-red-700 dark:bg-red-600 dark:hover:bg-red-800"
-                    >
-                      Remove from Wishlist
-                    </button>
-                  </div>
+                  <button
+                    onClick={() => removeFromWishlist(item._id)} // Corrected function call
+                    className="px-2 py-1 text-white rounded-md bg-[#FF9F0D] hover:bg-orange-700 transition-all"
+                  >
+                    Remove
+                  </button>
                 </div>
               </div>
             ))}

@@ -5,8 +5,8 @@ import { client } from "@/sanity/lib/client";
 import Image from "next/image";
 import { useParams } from "next/navigation";
 import { useEffect, useState, useCallback } from "react";
-import { ToastContainer, toast } from "react-toastify"; // Import Toastify
-import "react-toastify/dist/ReactToastify.css"; // Import Toastify styles
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 interface IFood {
   _id: string;
@@ -63,7 +63,7 @@ const Page = () => {
   const handleAddToCart = () => {
     if (product) {
       addToCart(product);
-      toast.success("Product added to cart!"); // Success toast for adding to cart
+      toast.success("Product added to cart!"); 
     }
   };
 
@@ -71,10 +71,10 @@ const Page = () => {
     if (product) {
       if (isInWishlist) {
         removeFromWishlist(product._id);
-        toast.info("Product removed from wishlist"); // Info toast for removing from wishlist
+        toast.info("Product removed from wishlist"); 
       } else {
         addToWishlist(product);
-        toast.success("Product added to wishlist!"); // Success toast for adding to wishlist
+        toast.success("Product added to wishlist!"); 
       }
     }
   };
@@ -116,7 +116,6 @@ const Page = () => {
           />
         </div>
 
-        {/* Product Details */}
         <div className="text-white space-y-5">
           <h1 className="text-3xl font-extrabold">{product.name}</h1>
           <p className="text-gray-400 leading-relaxed">{product.description}</p>
@@ -131,11 +130,10 @@ const Page = () => {
             </button>
             <button
               onClick={handleAddToWishlist}
-              className={`px-6 py-3 rounded-lg font-medium transition duration-300 ${
-                isInWishlist
+              className={`px-6 py-3 rounded-lg font-medium transition duration-300 ${isInWishlist
                   ? "bg-red-500 hover:bg-red-600 hover:scale-105"
                   : "bg-gray-700 hover:bg-gray-600 hover:scale-105"
-              }`}
+                }`}
             >
               {isInWishlist ? "Remove from Wishlist ❤️" : "Add to Wishlist 🤍"}
             </button>
@@ -143,7 +141,6 @@ const Page = () => {
         </div>
       </div>
 
-      {/* Toast Container for notifications */}
       <ToastContainer
         position="bottom-right"
         autoClose={3000}
